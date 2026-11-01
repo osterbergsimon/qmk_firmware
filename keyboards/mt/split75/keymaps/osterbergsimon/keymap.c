@@ -67,3 +67,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   }
   return true;
 }
+
+// Always boot into a static underglow mode. V-USB is bit-banged on this ATmega32A; a saved
+// animation (EEPROM survives flashing) running from power-on starved USB enumeration
+// (error -71) and bricked the board until the EEPROM was reset. Animations can still be
+// picked at runtime; they just aren't restored at power-on.
+void keyboard_post_init_user(void) {
+  rgblight_mode_noeeprom(RGBLIGHT_MODE_STATIC_LIGHT);
+}

@@ -51,3 +51,18 @@ Then press **Fn + Esc** to enter the bootloader. If the firmware is broken, unpl
 On NixOS (dotfiles `eclipse`), `qmk` and its udev rules (`hardware.keyboard.qmk.enable`) are
 installed, so no sudo is needed. Without the udev rules, flash the hex manually:
 `sudo bootloadHID -r mt_split75_osterbergsimon.hex`.
+
+## Gotchas (learned the hard way, 2026-11-01)
+
+- **Underglow always boots in static mode.** Animations can be picked at runtime but are not
+  restored at power-on: on this bit-banged V-USB chip a saved animation running from power-on
+  starved USB enumeration (`usb …: device not accepting address, error -71`) and the board looked
+  bricked. Flashing does not clear the saved setting (EEPROM survives).
+- **If it's dead anyway:** flash the `recover` keymap (`qmk compile -kb mt/split75 -km recover`).
+  It wipes EEPROM and keeps underglow off on every boot; once the board is alive, flash this
+  keymap again.
+- **Flashing is flaky on USB 3 ports** (`Communication error with device` partway through). Just
+  rerun — the board stays in the bootloader. The case front ports worked best. Never run two
+  flashers at once (e.g. an old `until lsusb … bootloadHID` loop still waiting in another
+  terminal); interleaved writes leave a half-written firmware.
+- `bootloadHID -r` often fails to restart the board after flashing; unplug/replug (no keys held).
