@@ -2,7 +2,7 @@
 
 YMDK Split75 (`mt/split75`, ATmega32A, bootloadHID/V-USB). Mainline default keymap plus one
 Fn layer on the small key right of the left space bar. Successor to the 2020 `tux_keymap`
-(see branch `legacy-2020` if it exists): only the media keys were kept, lighting keys added.
+(still on this fork's `master` branch, untouched): only the media keys were kept, lighting keys added.
 
 ## Base layer
 
