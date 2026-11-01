@@ -2,13 +2,17 @@
 // SPDX-License-Identifier: GPL-2.0-or-later
 //
 // Default keymap + an Fn layer on the small left space key (as in the 2020 tux_keymap):
-// media on F1-F3, underglow/backlight on F5-F12, bootloader on Esc.
+// media on F1-F3, night-blue on F4, underglow/backlight on F5-F12, bootloader on Esc.
 
 #include QMK_KEYBOARD_H
 
 enum layer_names {
   BASE,
   FN
+};
+
+enum custom_keycodes {
+  UG_NBLU = SAFE_RANGE  // static dim blue, matches the OpenRGB "night-blue" profile
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -37,11 +41,11 @@ KC_2,  KC_3,    KC_LSFT,  KC_Z,    KC_X,    KC_C,   KC_V,   KC_B,               
 KC_0,  KC_1,    KC_LCTL,  KC_LGUI, KC_LALT, KC_SPC, MO(FN),                       KC_SPC,         KC_RALT, _______,KC_RCTL,                     KC_LEFT,  KC_DOWN, KC_RIGHT
   ),
 
-  /* Fn: Esc = bootloader, F1-F3 = mute/vol-/vol+,
+  /* Fn: Esc = bootloader, F1-F3 = mute/vol-/vol+, F4 = static dim blue (night-blue),
    *     F5 underglow on/off, F6/F7 next/prev mode, F8/F9 brightness -/+, F10/F11 hue -/+, F12 backlight on/off
    */
   [FN] = LAYOUT(
-                QK_BOOT,  KC_MUTE, KC_VOLD, KC_VOLU, _______, UG_TOGG, UG_NEXT,              UG_PREV, UG_VALD, UG_VALU, UG_HUED, UG_HUEU, BL_TOGG,  _______,  _______, _______,
+                QK_BOOT,  KC_MUTE, KC_VOLD, KC_VOLU, UG_NBLU, UG_TOGG, UG_NEXT,              UG_PREV, UG_VALD, UG_VALU, UG_HUED, UG_HUEU, BL_TOGG,  _______,  _______, _______,
 _______, _______, _______, _______, _______, _______, _______, _______, _______,              _______, _______, _______, _______, _______, _______, _______,           _______,
 _______, _______, _______, _______, _______, _______, _______, _______,              _______, _______, _______, _______, _______, _______, _______, _______,           _______,
 _______, _______, _______, _______, _______, _______, _______, _______,              _______, _______, _______, _______, _______, _______, _______,                    _______,
@@ -49,3 +53,17 @@ _______, _______, _______, _______, _______, _______, _______, _______,         
 _______, _______, _______, _______, _______, _______, _______,                       _______,          _______, _______, _______,                   _______, _______,  _______
   )
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  switch (keycode) {
+    case UG_NBLU:
+      if (record->event.pressed) {
+        // Saved to EEPROM so it survives replugging; V=48 ~ the Aura's 0x000030
+        rgblight_enable();
+        rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
+        rgblight_sethsv(170, 255, 48);  // hue 170 = blue
+      }
+      return false;
+  }
+  return true;
+}

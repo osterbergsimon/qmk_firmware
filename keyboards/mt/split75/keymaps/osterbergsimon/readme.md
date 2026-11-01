@@ -28,6 +28,7 @@ Fn layer on the small key right of the left space bar. Successor to the 2020 `tu
 |-----|--------|
 | Esc | **Bootloader** (for flashing) |
 | F1 / F2 / F3 | Mute / Volume down / Volume up |
+| F4 | Underglow **static dim blue** (matches the OpenRGB `night-blue` profile; saved on the keyboard) |
 | F5 | Underglow on/off |
 | F6 / F7 | Underglow next / previous mode |
 | F8 / F9 | Underglow brightness down / up |
