@@ -58,10 +58,11 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
   switch (keycode) {
     case UG_NBLU:
       if (record->event.pressed) {
-        // Saved to EEPROM so it survives replugging; V=48 ~ the Aura's 0x000030
+        // Saved to EEPROM so it survives replugging. V=48 (the Aura's 0x000030) was barely
+        // visible on these LEDs; 136 = 8 brightness steps of 17
         rgblight_enable();
         rgblight_mode(RGBLIGHT_MODE_STATIC_LIGHT);
-        rgblight_sethsv(170, 255, 48);  // hue 170 = blue
+        rgblight_sethsv(170, 255, 136);  // hue 170 = blue
       }
       return false;
   }
